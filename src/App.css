@@ -252,21 +252,18 @@ body {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(21, 44, 35, 0);
-  backdrop-filter: blur(0px);
-  transition: background 0.3s ease, backdrop-filter 0.3s ease;
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.35s ease;
 }
 
 .overlay.overlay-visible {
-  background: rgba(21, 44, 35, 0.85);
-  backdrop-filter: blur(8px);
   opacity: 1;
   pointer-events: all;
+  background: rgba(15, 30, 22, 0.88);
+  backdrop-filter: blur(6px);
 }
 
-/* Card animation — keyframes with multi-rotation */
 .overlay-card {
   position: relative;
   width: 100%;
@@ -280,55 +277,57 @@ body {
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
 }
 
-/* entering: spin-in from below */
+/* Card entering: Y-axis flip like a door swinging open */
 .card-entering {
-  animation: cardEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  transform-origin: center center;
+  animation: cardFlipIn 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  transform-origin: left center;
 }
 
-@keyframes cardEnter {
+@keyframes cardFlipIn {
   0% {
     opacity: 0;
-    transform: scale(0.5) rotateZ(-180deg) translateY(60px);
+    transform: perspective(1200px) rotateY(-90deg) scale(0.85);
   }
-  60% {
+  50% {
     opacity: 1;
-    transform: scale(1.04) rotateZ(20deg) translateY(-8px);
+    transform: perspective(1200px) rotateY(15deg) scale(1.03);
   }
-  80% {
-    transform: scale(0.98) rotateZ(-5deg) translateY(2px);
+  70% {
+    transform: perspective(1200px) rotateY(-8deg) scale(1.01);
+  }
+  85% {
+    transform: perspective(1200px) rotateY(3deg) scale(1);
   }
   100% {
     opacity: 1;
-    transform: scale(1) rotateZ(0deg) translateY(0);
+    transform: perspective(1200px) rotateY(0deg) scale(1);
   }
 }
 
-/* open: just sit there */
+/* Card is open — no animation, just static */
 .card-open {
   opacity: 1;
-  transform: scale(1) rotateZ(0deg);
-  transition: none;
+  transform: perspective(1200px) rotateY(0deg) scale(1);
 }
 
-/* exiting: spin-out */
+/* Card exiting: Y-axis flip away */
 .card-exiting {
-  animation: cardExit 0.45s cubic-bezier(0.4, 0, 1, 1) forwards;
-  transform-origin: center center;
+  animation: cardFlipOut 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+  transform-origin: left center;
 }
 
-@keyframes cardExit {
+@keyframes cardFlipOut {
   0% {
     opacity: 1;
-    transform: scale(1) rotateZ(0deg) translateY(0);
+    transform: perspective(1200px) rotateY(0deg) scale(1);
   }
   40% {
     opacity: 1;
-    transform: scale(1.06) rotateZ(10deg) translateY(-20px);
+    transform: perspective(1200px) rotateY(20deg) scale(1.04);
   }
   100% {
     opacity: 0;
-    transform: scale(0.6) rotateZ(180deg) translateY(80px);
+    transform: perspective(1200px) rotateY(90deg) scale(0.85);
   }
 }
 
@@ -367,13 +366,13 @@ body {
 }
 
 .overlay-header {
-  background: linear-gradient(135deg, #5B7B6F 0%, #4A6A5E 100%);
+  background: linear-gradient(160deg, #1a3d2e 0%, #0f2820 50%, #152c23 100%);
   padding: 32px 32px 28px;
   flex-shrink: 0;
 }
 
 .overlay-badge {
-  background: rgba(212, 165, 116, 0.2);
+  background: rgba(212, 165, 116, 0.25);
   color: #D4A574;
   font-size: 9px;
   font-weight: 700;
