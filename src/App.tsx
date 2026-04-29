@@ -1,22 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FlipCard } from './components/FlipCard';
 import { lessons } from './data/lessons';
 import './App.css';
 
 function App() {
-  const [flippedIds, setFlippedIds] = useState<Set<number>>(new Set());
+  const [activeLesson, setActiveLesson] = useState<number | null>(null);
 
-  const toggleCard = (id: number) => {
-    setFlippedIds(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  };
+  const closeOverlay = useCallback(() => {
+    setActiveLesson(null);
+  }, []);
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeOverlay();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [closeOverlay]);
+
+  // Prevent body scroll when overlay open
+  useEffect(() => {
+    if (activeLesson !== null) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [activeLesson]);
 
   return (
     <div className="app">
@@ -42,8 +53,7 @@ function App() {
             10 Lektionen. 10 Tage. <span className="highlight">Ein vollständiges HD-Fundament.</span>
           </h1>
           <p className="intro-text">
-            Klicke auf eine Karte, um die Lektion zu lesen. Klicke erneut, um sie zu schließen.
-            Jeden Tag eine neue Erkenntnis.
+            Klicke auf eine Karte, um die Lektion zu lesen. Schließe mit einem Klick außerhalb oder auf ✕.
           </p>
           <div className="intro-hint">
             <span className="hint-icon">👆</span>
@@ -56,15 +66,82 @@ function App() {
       <main className="cards-section">
         <div className="cards-grid">
           {lessons.map((lesson) => (
-              <FlipCard
-                key={lesson.id}
-                lesson={lesson}
-                isFlipped={flippedIds.has(lesson.id)}
-                onClick={() => toggleCard(lesson.id)}
-              />
+            <FlipCard
+              key={lesson.id}
+              lesson={lesson}
+              isFlipped={activeLesson === lesson.id}
+              onClick={() => setActiveLesson(activeLesson === lesson.id ? null : lesson.id)}
+            />
           ))}
         </div>
       </main>
+
+      {/* Overlay */}
+      {activeLesson !== null && (() => {
+        const lesson = lessons.find(l => l.id === activeLesson)!;
+        return (
+          <div
+            className="overlay"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) closeOverlay();
+            }}
+          >
+            <div className="overlay-card">
+              {/* Close button */}
+              <button className="overlay-close" onClick={closeOverlay} aria-label="Schließen">
+                ✕
+              </button>
+
+              {/* Card content */}
+              <div className="overlay-inner">
+                <div className="overlay-header">
+                  <span className="overlay-badge">Lektion {lesson.day}</span>
+                  <span className="overlay-icon">{lesson.icon}</span>
+                  <h2 className="overlay-title">{lesson.title}</h2>
+                  <p className="overlay-subtitle">{lesson.subtitle}</p>
+                </div>
+                <div className="overlay-content">
+                  {lesson.content.split('\n').map((line, i) => {
+                    if (line.startsWith('## ')) {
+                      return <h3 key={i} className="content-h2">{line.replace('## ', '')}</h3>;
+                    }
+                    if (line.startsWith('### ')) {
+                      return <h4 key={i} className="content-h3">{line.replace('### ', '')}</h4>;
+                    }
+                    if (line.startsWith('**') && line.endsWith('**')) {
+                      return <p key={i} className="content-bold">{line.replace(/\*\*/g, '')}</p>;
+                    }
+                    if (line.startsWith('- **')) {
+                      const match = line.match(/- \*\*(.+?)\*\* —? ?(.*)/);
+                      if (match) {
+                        return (
+                          <p key={i} className="content-list-item">
+                            <strong>{match[1]}</strong>{match[2] ? ` — ${match[2]}` : ''}
+                          </p>
+                        );
+                      }
+                    }
+                    if (line.startsWith('- ')) {
+                      return <p key={i} className="content-list">{line.replace('- ', '• ')}</p>;
+                    }
+                    if (line === '---') {
+                      return <hr key={i} className="content-divider" />;
+                    }
+                    if (line.trim() === '') {
+                      return <br key={i} />;
+                    }
+                    return <p key={i} className="content-p">{line}</p>;
+                  })}
+                </div>
+                <div className="overlay-footer">
+                  <span>🌿</span>
+                  <span className="overlay-brand">Human Design Guru</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Footer */}
       <footer className="footer">
