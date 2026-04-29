@@ -114,7 +114,7 @@ body {
   margin: 0 auto;
 }
 
-/* ── Grid Card (Closed State) ─────────────────────── */
+/* ── Grid Card ─────────────────────────────────────── */
 .card-wrapper {
   perspective: 1000px;
   width: 100%;
@@ -144,7 +144,6 @@ body {
   overflow: hidden;
 }
 
-/* Front side */
 .card-front {
   transform: rotateY(0deg);
 }
@@ -255,20 +254,19 @@ body {
   padding: 20px;
   background: rgba(21, 44, 35, 0);
   backdrop-filter: blur(0px);
-  animation: overlayIn 0.3s ease forwards;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
 }
 
-@keyframes overlayIn {
-  from {
-    background: rgba(21, 44, 35, 0);
-    backdrop-filter: blur(0px);
-  }
-  to {
-    background: rgba(21, 44, 35, 0.85);
-    backdrop-filter: blur(8px);
-  }
+.overlay.overlay-visible {
+  background: rgba(21, 44, 35, 0.85);
+  backdrop-filter: blur(8px);
+  opacity: 1;
+  pointer-events: all;
 }
 
+/* Card animation — keyframes with multi-rotation */
 .overlay-card {
   position: relative;
   width: 100%;
@@ -280,20 +278,61 @@ body {
   overflow: hidden;
   background: #FAF8F5;
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
-  animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-@keyframes cardIn {
-  from {
+/* entering: spin-in from below */
+.card-entering {
+  animation: cardEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin: center center;
+}
+
+@keyframes cardEnter {
+  0% {
     opacity: 0;
-    transform: scale(0.85) rotateX(-10deg);
+    transform: scale(0.5) rotateZ(-180deg) translateY(60px);
   }
-  to {
+  60% {
     opacity: 1;
-    transform: scale(1) rotateX(0deg);
+    transform: scale(1.04) rotateZ(20deg) translateY(-8px);
+  }
+  80% {
+    transform: scale(0.98) rotateZ(-5deg) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg) translateY(0);
   }
 }
 
+/* open: just sit there */
+.card-open {
+  opacity: 1;
+  transform: scale(1) rotateZ(0deg);
+  transition: none;
+}
+
+/* exiting: spin-out */
+.card-exiting {
+  animation: cardExit 0.45s cubic-bezier(0.4, 0, 1, 1) forwards;
+  transform-origin: center center;
+}
+
+@keyframes cardExit {
+  0% {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg) translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.06) rotateZ(10deg) translateY(-20px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6) rotateZ(180deg) translateY(80px);
+  }
+}
+
+/* Close button */
 .overlay-close {
   position: absolute;
   top: 16px;
@@ -301,9 +340,9 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: none;
-  background: rgba(45, 74, 62, 0.1);
-  color: #5B7B6F;
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
   font-size: 16px;
   cursor: pointer;
   z-index: 10;
@@ -311,13 +350,15 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  line-height: 1;
 }
 
 .overlay-close:hover {
-  background: rgba(45, 74, 62, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   transform: scale(1.1);
 }
 
+/* Overlay inner layout */
 .overlay-inner {
   display: flex;
   flex-direction: column;

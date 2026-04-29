@@ -3,31 +3,67 @@ import { FlipCard } from './components/FlipCard';
 import { lessons } from './data/lessons';
 import './App.css';
 
+type OverlayPhase = 'closed' | 'entering' | 'open' | 'exiting';
+
 function App() {
   const [activeLesson, setActiveLesson] = useState<number | null>(null);
+  const [overlayPhase, setOverlayPhase] = useState<OverlayPhase>('closed');
 
   const closeOverlay = useCallback(() => {
-    setActiveLesson(null);
+    setOverlayPhase('exiting');
   }, []);
+
+  // After exit animation completes, truly close
+  useEffect(() => {
+    if (overlayPhase === 'exiting') {
+      const timer = setTimeout(() => {
+        setActiveLesson(null);
+        setOverlayPhase('closed');
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [overlayPhase]);
+
+  // When card is clicked, start enter animation
+  const handleCardClick = useCallback((lessonId: number) => {
+    if (overlayPhase === 'closed' || overlayPhase === 'exiting') {
+      setActiveLesson(lessonId);
+      // Force reflow so animation restarts
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setOverlayPhase('entering');
+        });
+      });
+    } else if (overlayPhase === 'open') {
+      closeOverlay();
+    }
+  }, [overlayPhase, closeOverlay]);
+
+  // After enter animation, switch to 'open'
+  useEffect(() => {
+    if (overlayPhase === 'entering') {
+      const timer = setTimeout(() => setOverlayPhase('open'), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [overlayPhase]);
 
   // Close on Escape key
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeOverlay();
+      if (e.key === 'Escape' && overlayPhase === 'open') closeOverlay();
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [closeOverlay]);
+  }, [overlayPhase, closeOverlay]);
 
   // Prevent body scroll when overlay open
   useEffect(() => {
-    if (activeLesson !== null) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    const isVisible = overlayPhase === 'entering' || overlayPhase === 'open' || overlayPhase === 'exiting';
+    document.body.style.overflow = isVisible ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
-  }, [activeLesson]);
+  }, [overlayPhase]);
+
+  const showOverlay = overlayPhase !== 'closed';
 
   return (
     <div className="app">
@@ -70,23 +106,23 @@ function App() {
               key={lesson.id}
               lesson={lesson}
               isFlipped={activeLesson === lesson.id}
-              onClick={() => setActiveLesson(activeLesson === lesson.id ? null : lesson.id)}
+              onClick={() => handleCardClick(lesson.id)}
             />
           ))}
         </div>
       </main>
 
       {/* Overlay */}
-      {activeLesson !== null && (() => {
+      {showOverlay && activeLesson !== null && (() => {
         const lesson = lessons.find(l => l.id === activeLesson)!;
         return (
           <div
-            className="overlay"
+            className={`overlay ${overlayPhase === 'entering' ? 'overlay-visible' : ''}`}
             onClick={(e) => {
-              if (e.target === e.currentTarget) closeOverlay();
+              if (e.target === e.currentTarget && overlayPhase === 'open') closeOverlay();
             }}
           >
-            <div className="overlay-card">
+            <div className={`overlay-card card-${overlayPhase}`}>
               {/* Close button */}
               <button className="overlay-close" onClick={closeOverlay} aria-label="Schließen">
                 ✕
