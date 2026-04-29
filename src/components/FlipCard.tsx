@@ -3,11 +3,16 @@ import './FlipCard.css';
 
 interface FlipCardProps {
   lesson: Lesson;
+  isFlipped: boolean;
+  onClick: () => void;
 }
 
-export function FlipCard({ lesson }: FlipCardProps) {
+export function FlipCard({ lesson, isFlipped, onClick }: FlipCardProps) {
   return (
-    <div className="card-wrapper">
+    <div
+      className={`card-wrapper${isFlipped ? ' flipped' : ''}`}
+      onClick={onClick}
+    >
       <div className="card-inner">
         {/* Front — hidden, shows topic */}
         <div className="card-face card-front">

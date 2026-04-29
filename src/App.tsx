@@ -56,13 +56,12 @@ function App() {
       <main className="cards-section">
         <div className="cards-grid">
           {lessons.map((lesson) => (
-            <div
-              key={lesson.id}
-              className={`flip-on-click ${flippedIds.has(lesson.id) ? 'flipped' : ''}`}
-              onClick={() => toggleCard(lesson.id)}
-            >
-              <FlipCard lesson={lesson} />
-            </div>
+              <FlipCard
+                key={lesson.id}
+                lesson={lesson}
+                isFlipped={flippedIds.has(lesson.id)}
+                onClick={() => toggleCard(lesson.id)}
+              />
           ))}
         </div>
       </main>
