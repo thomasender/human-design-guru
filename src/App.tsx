@@ -117,7 +117,7 @@ function App() {
         const lesson = lessons.find(l => l.id === activeLesson)!;
         return (
           <div
-            className={`overlay ${overlayPhase === 'entering' ? 'overlay-visible' : ''}`}
+            className={`overlay ${(overlayPhase === 'entering' || overlayPhase === 'open') ? 'overlay-visible' : ''}`}
             onClick={(e) => {
               if (e.target === e.currentTarget && overlayPhase === 'open') closeOverlay();
             }}
