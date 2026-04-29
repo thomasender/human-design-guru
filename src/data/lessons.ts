@@ -119,7 +119,7 @@ Was ist dein Typ? Was ist deine Autorität? Das sind die zwei wichtigsten Dinge,
 
 ---
 
-🔮 **Morgen**: Die 9 Zentren — dein inneres Architektur-System.
+🔮 **Nächster Insight**: Die 9 Zentren — dein inneres Architektur-System.
 `
   },
   {
@@ -200,7 +200,7 @@ Heute Abend: Schau auf deinen BodyGraph. Welche Zentren sind definiert (ausgefü
 
 ---
 
-🔮 **Morgen**: Die 4 Typen — wie sie die Welt bewegen.
+🔮 **Nächster Insight**: Die 4 Typen — wie sie die Welt bewegen.
 `
   },
   {
@@ -284,7 +284,7 @@ Morgen mehr dazu. Heute: Schau auf deinen Chart. Hast du ein gefülltes Sakral-Z
 
 ---
 
-🔮 **Morgen**: Strategie & Autorität — wie du wirklich entscheidest.
+🔮 **Nächster Insight**: Strategie & Autorität — wie du wirklich entscheidest.
 `
   },
   {
@@ -383,7 +383,7 @@ Nicht der Kopf. Der Bauch.
 
 ---
 
-🔮 **Morgen**: Die 12 Profile — deine Persönlichkeits-Archetypen.
+🔮 **Nächster Insight**: Die 12 Profile — deine Persönlichkeits-Archetypen.
 `
   },
   {
@@ -508,7 +508,7 @@ Ein 5/1 ist kein "Typ 5". Er ist eine einzigartige Kombination aus Wandler und E
 
 ---
 
-🔮 **Morgen**: Gates & Linien — die 64 Hexagramme und die I Ching Verbindung.
+🔮 **Nächster Insight**: Gates & Linien — die 64 Hexagramme und die I Ching Verbindung.
 `
   },
   {
@@ -609,7 +609,7 @@ Die 64 Gates sind dieselben 64 Möglichkeiten der Existenz — aber in HD hast d
 
 ---
 
-🔮 **Morgen**: Die 36 Kanäle — was sie bedeuten und warum sie wichtiger sind als einzelne Gates.
+🔮 **Nächster Insight**: Die 36 Kanäle — was sie bedeuten und warum sie wichtiger sind als einzelne Gates.
 `
   },
   {
@@ -727,7 +727,7 @@ Morgen schauen wir uns an, was sie bedeuten.
 
 ---
 
-🔮 **Morgen**: Die 6 Kreisläufe — wie dein System zusammenarbeitet.
+🔮 **Nächster Insight**: Die 6 Kreisläufe — wie dein System zusammenarbeitet.
 `
   },
   {
@@ -825,7 +825,7 @@ Wenn du verstehst, in welchem Kreislauf du dominant bist, kannst du:
 
 ---
 
-🔮 **Morgen**: Design & Persönlichkeit — die zwei Körper, in denen du lebst.
+🔮 **Nächster Insight**: Design & Persönlichkeit — die zwei Körper, in denen du lebst.
 `
   },
   {
