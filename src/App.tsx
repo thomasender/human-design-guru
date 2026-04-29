@@ -166,6 +166,24 @@ function App() {
                     if (line.trim() === '') {
                       return <br key={i} />;
                     }
+                    // Link to next lesson
+                    const nextMatch = line.match(/^🔮 \*\*Nächster Insight\*\*: (.+)/);
+                    if (nextMatch && lesson.id < lessons.length) {
+                      const nextLesson = lessons[lesson.id];
+                      return (
+                        <p key={i} className="next-insight">
+                          <button
+                            className="next-insight-btn"
+                            onClick={() => {
+                              setActiveLesson(nextLesson.id);
+                              setOverlayPhase('entering');
+                            }}
+                          >
+                            🔮 {nextMatch[1]}
+                          </button>
+                        </p>
+                      );
+                    }
                     return <p key={i} className="content-p">{line}</p>;
                   })}
                 </div>
