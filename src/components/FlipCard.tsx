@@ -1,5 +1,4 @@
 import type { Lesson } from '../data/lessons';
-import './FlipCard.css';
 
 interface FlipCardProps {
   lesson: Lesson;
